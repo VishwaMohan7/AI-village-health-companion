@@ -1,1 +1,5 @@
 .streamlit/secrets.toml
+__pycache__/
+venv/
+ffmpeg-master-latest-win64-gpl-shared/
+ffmpeg-master-latest-win64-gpl-shared.zip

@@ -1,13 +1,11 @@
 SpeechRecognition
 gTTS
 streamlit
-openai
 langdetect
-sounddevice
-numpy
 pydub
 bokeh
 streamlit-mic-recorder
 ffmpeg-python
 streamlit-TTS
 python-dotenv
+requests
