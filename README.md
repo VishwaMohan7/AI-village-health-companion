@@ -1,85 +1,142 @@
 # Village Health Care Companion
+### A Multilingual, Voice-Enabled Health Guidance Prototype
+
+A Streamlit-based voice assistant that accepts spoken health-related queries, checks a small set of predefined symptom rules, and uses a locally running Ollama model for broader responses. The assistant can speak its replies in the language selected by the user.
+
+<div align="center">
+
+![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=flat&logo=streamlit&logoColor=white)
+![Ollama](https://img.shields.io/badge/Ollama-111827?style=flat)
+![License](https://img.shields.io/badge/License-MIT-58A6FF?style=flat)
+
+</div>
+
+---
 
 ## Overview
 
-This project is a Streamlit-based voice assistant for basic health guidance. It records speech from the browser, converts the spoken input to text, checks a small local symptom rule set, and falls back to a locally running Ollama model for broader responses. Replies are generated and spoken in the language selected by the user.
+Village Health Care Companion is a prototype designed to make basic health guidance accessible through voice interaction. Users can speak through the browser, have their speech converted to text, and receive a response that is played back as audio.
 
-## Current Architecture
-
-- `streamlit` provides the web UI.
-- `streamlit-mic-recorder` captures microphone input and performs speech-to-text.
-- `streamlit-TTS` and `gTTS` convert the assistant response to audio.
-- `requests` sends chat requests to a local Ollama server.
-- A small in-memory symptom dictionary handles simple known cases before the app asks Ollama.
-- Ollama can generate a limited set of follow-up questions before final analysis.
+The application first checks a small in-memory symptom dictionary for a few known cases. For broader queries, it sends the conversation to a locally running Ollama model. The assistant can ask a limited number of follow-up questions before providing its response.
 
 ## Features
 
-- Voice input from the browser
-- Response playback in the selected language
-- Basic symptom keyword matching for a few predefined cases
-- Local LLM inference through Ollama
-- Limited voice follow-up questions for deeper symptom analysis
-- User profile inputs for age and weight
-- Language choices limited to English, Hindi, and Kannada
-- Configurable Ollama base URL and model from the sidebar
-- Configurable cap for follow-up questions
+- **Voice input:** capture microphone audio through the browser.
+- **Speech-to-text:** convert spoken input into a text transcript.
+- **Basic symptom matching:** check a small set of predefined symptom keywords and cases.
+- **Local LLM responses:** use Ollama for broader health-related queries.
+- **Follow-up questions:** ask a capped number of additional questions for further context.
+- **Text-to-speech:** play assistant responses aloud.
+- **Multilingual interaction:** choose English, Hindi, or Kannada.
+- **User profile inputs:** provide age and weight as profile context.
+- **Configurable model settings:** set the Ollama base URL and model from the sidebar or environment variables.
 
-## Ollama Setup
+## How It Works
 
-Install Ollama and make sure the local server is running.
+1. **Speak:** the user records a query through the browser microphone.
+2. **Transcribe:** the speech input is converted into text.
+3. **Check:** the app checks its small local symptom rule set for a known case.
+4. **Ask follow-ups:** when applicable, Ollama can generate a limited set of follow-up questions.
+5. **Respond:** the assistant generates a response in the language selected in the sidebar.
+6. **Play audio:** the response is converted to speech and played back.
 
-Example:
+## Architecture & Tools
 
-```sh
-ollama serve
-ollama pull llama3
+| Component | Role |
+|---|---|
+| Streamlit | Web application interface |
+| streamlit-mic-recorder | Browser microphone capture and speech-to-text |
+| Ollama | Local LLM inference |
+| requests | Sends chat requests to the local Ollama server |
+| streamlit-TTS and gTTS | Converts assistant responses to audio |
+| In-memory symptom dictionary | Handles a few predefined symptom cases |
+
+## Requirements
+
+- Python
+- Ollama installed and running locally
+- `ffmpeg` and `ffprobe` available on your system `PATH`
+- Python dependencies listed in `requirements.txt`
+
+## Setup
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/VishwaMohan7/AI-village-health-companion.git
+cd AI-village-health-companion
 ```
 
-By default, the app expects:
+### 2. Create a virtual environment
 
-- Base URL: `http://127.0.0.1:11434`
-- Model: `llama3`
+**Windows (PowerShell):**
 
-You can also override these with environment variables:
-
-```sh
-OLLAMA_BASE_URL=http://127.0.0.1:11434
-OLLAMA_MODEL=llama3
-```
-
-## Installation
-
-Create and activate a virtual environment:
-
-```sh
+```powershell
 python -m venv venv
 venv\Scripts\activate
 ```
 
-Install Python dependencies:
+### 3. Install dependencies
 
-```sh
+```bash
 pip install -r requirements.txt
 ```
 
-Make sure `ffmpeg` and `ffprobe` are available on your system `PATH`, because browser audio playback depends on them.
+### 4. Set up Ollama
 
-## Run
+Install Ollama, start its local server, and download the model:
 
-```sh
+```bash
+ollama serve
+ollama pull llama3
+```
+
+By default, the application expects:
+
+- **Ollama base URL:** `http://127.0.0.1:11434`
+- **Model:** `llama3`
+
+You can override these defaults with environment variables:
+
+```env
+OLLAMA_BASE_URL=http://127.0.0.1:11434
+OLLAMA_MODEL=llama3
+```
+
+### 5. Check audio dependencies
+
+Ensure both `ffmpeg` and `ffprobe` are installed and accessible through your system `PATH`.
+
+## Run the Application
+
+Start the Streamlit app from the project directory:
+
+```bash
 streamlit run app.py
 ```
 
-## Notes
+Open the local URL shown in the terminal.
 
-- This is a prototype and should not be treated as a diagnostic medical system.
-- The built-in symptom checker is intentionally small and only covers a few hardcoded examples.
-- Follow-up questions are intentionally capped to keep the interaction short and focused.
-- Follow-up questions are spoken aloud, and the app prints the recognized speech transcript for each answer.
-- The model is instructed to answer in the exact language chosen in the sidebar.
-- For urgent, severe, or persistent symptoms, users should be directed to a qualified medical professional.
+## Important Limitations & Safety
+
+- This project is a prototype for basic health guidance, **not a medical diagnostic system**.
+- The built-in symptom checker covers only a small number of hardcoded examples.
+- Follow-up questions are capped to keep the interaction short and focused.
+- Follow-up questions are spoken aloud, and the recognized speech transcript is printed by the app.
+- The model is instructed to respond in the exact language selected in the sidebar.
+- For urgent, severe, or persistent symptoms, seek guidance from a qualified medical professional.
+
+Do not use this application as a substitute for professional medical evaluation.
 
 ## License
 
-This project is licensed under the MIT License. See `LICENSE` for details.
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+<div align="center">
+
+### Making basic health guidance more accessible through voice and language.
+
+</div>
